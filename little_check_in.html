@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Little Check-In 💗</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff7fb;color:#29232a;margin:0;padding:24px}
+.card{max-width:650px;margin:auto;background:white;border-radius:24px;padding:28px;box-shadow:0 8px 30px #00000012}
+h1{text-align:center;margin-top:0}.sub{text-align:center;color:#716773}
+label{display:block;font-weight:700;margin-top:20px;margin-bottom:8px}
+input,textarea,select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ddd;border-radius:12px;font:inherit}
+textarea{min-height:90px}
+.options{display:grid;gap:8px}.options label{font-weight:500;margin:0;background:#faf7f9;padding:10px;border-radius:10px}
+button{width:100%;margin-top:24px;padding:14px;border:0;border-radius:14px;background:#29232a;color:white;font-size:16px;font-weight:700}
+#done{display:none;text-align:center}.small{font-size:13px;color:#777}
+</style>
+</head>
+<body>
+<div class="card" id="formCard">
+<h1>💗 A Little Check-In</h1>
+<p class="sub">Just checking on you because you matter to me. Be honest — no perfect answers needed. 🫂</p>
+<form id="checkin">
+<label>What's your name? (optional)</label>
+<input name="name" autocomplete="off">
+
+<label>How are you really feeling today?</label>
+<div class="options">
+<label><input type="radio" name="feeling" value="Good" required> 😊 Good</label>
+<label><input type="radio" name="feeling" value="Okay"> 😐 Okay</label>
+<label><input type="radio" name="feeling" value="Overwhelmed"> 😵 Overwhelmed</label>
+<label><input type="radio" name="feeling" value="Sad"> 🥺 Sad</label>
+<label><input type="radio" name="feeling" value="Anxious"> 😟 Anxious</label>
+</div>
+
+<label>How have you been mentally?</label>
+<textarea name="mental" placeholder="Say as much or as little as you want."></textarea>
+
+<label>How's your stress/anxiety been?</label>
+<select name="anxiety"><option>Low</option><option>Some</option><option>Pretty high</option><option>Really high</option></select>
+
+<label>Did you get enough sleep?</label>
+<select name="sleep"><option>Yes</option><option>Somewhat</option><option>Not really</option></select>
+
+<label>Have you eaten today?</label>
+<select name="ate"><option>Yes</option><option>A little</option><option>Not yet</option></select>
+
+<label>What do you need most right now?</label>
+<div class="options">
+<label><input type="checkbox" name="needs" value="Someone to listen"> 🗣️ Someone to listen</label>
+<label><input type="checkbox" name="needs" value="Advice"> 💭 Advice</label>
+<label><input type="checkbox" name="needs" value="Distraction"> 🎶 A distraction</label>
+<label><input type="checkbox" name="needs" value="Prayer"> 🙏🏾 Prayer</label>
+<label><input type="checkbox" name="needs" value="Virtual hug"> 🫂 A virtual hug</label>
+</div>
+
+<label>Anything you want your friend to know?</label>
+<textarea name="note" placeholder="This can be anything."></textarea>
+
+<p class="small">Your answers are sent only when you press the button below.</p>
+<button type="submit">Send My Check-In 💌</button>
+</form>
+</div>
+
+<div class="card" id="done">
+<h1>🫂 Check-In Sent!</h1>
+<p>Thank you for being honest. Whatever today looks like, you don't have to carry everything alone.</p>
+<p><strong>Sending you the biggest virtual hug. 💗</strong></p>
+<p>You are loved. You matter. And somebody is thinking about you. 🥹</p>
+<p class="small">Your friend loves you and wanted to make sure you knew that.</p>
+</div>
+
+<script>
+/*
+To make this send answers to you, connect this form to a form endpoint
+(such as Formspree/Getform) and replace the fetch URL below.
+*/
+const ENDPOINT = "";
+document.getElementById("checkin").addEventListener("submit", async e=>{
+ e.preventDefault();
+ const f=new FormData(e.target);
+ const data=Object.fromEntries(f.entries());
+ data.needs=[...document.querySelectorAll('input[name="needs"]:checked')].map(x=>x.value);
+ if(!ENDPOINT){ alert("This demo is ready, but a private response endpoint still needs to be connected so your friend’s answers can reach you."); return; }
+ await fetch(ENDPOINT,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(data)});
+ document.getElementById("formCard").style.display="none";
+ document.getElementById("done").style.display="block";
+});
+</script>
+</body>
+</html>
